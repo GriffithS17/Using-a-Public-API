@@ -13,6 +13,14 @@ app.get("/", (req, res) => {
 
 app.use(express.static("public"))
 
+
+function normalizeUrl(input) {
+  if (!/^https?:\/\//i.test(input)) {
+    return 'https://' + input
+  }
+  return input
+}
+
 app.post("/upload", async (req, res) => {
   const config = {
     headers: {
@@ -21,12 +29,12 @@ app.post("/upload", async (req, res) => {
     }
   }
 
-  const url = new URL(req.body.link)
+  const url = new URL(normalizeUrl(req.body.link))
   const domain = url.hostname
 
   try {
     const result = await axios.get(`https://www.virustotal.com/api/v3/domains/${domain}`, config)
-    console.log(result.data)
+    console.log(JSON.stringify(result.data, null, 2))
 
     const attributes = result.data.data.attributes
 
@@ -34,7 +42,8 @@ app.post("/upload", async (req, res) => {
       showResults: true,
       harmless: attributes.total_votes.harmless,
       malicious: attributes.total_votes.malicious,
-      vendor: attributes.last_analysis_results
+      vendor: attributes.last_analysis_results,
+      name: result.data.data.id
     })
 
   } catch (error) {

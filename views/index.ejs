@@ -49,17 +49,47 @@
 
         <% if(showResults) { %>
 
+        <h1 class="fs-1 mt-5"><%= name %></h1>
+
         <hr class="mt-5">
 
-        <h1 class="mt-2 mb-3">Votes:</h1>
+        <h1 class="mt-2 mb-3 text-align-left">Votes:</h1>
 
-        <p class="text-success">Harmless: <%= harmless  %></p>
-        <p class="text-danger">Malicious: <%= malicious %></p>
+        <p class="text-success fs-4">Harmless: <%= harmless %></p>
+        <p class="text-danger fs-4">Malicious: <%= malicious %></p>
 
         <hr class="mt-4">
 
-        <% } %>
+        <table class="table mt-4">
+          <% Object.keys(vendor).forEach(engine => { %>
+          <tr>
+            <td><%= engine %></td>
+            <td>
+              <% 
+                let color = 'text-light'
+                let result = vendor[engine].result
+                
+                if(result == 'clean'){
+                  color = 'text-success'
+                } 
+                else if (result == 'suspicious'){
+                  color = 'text-warning'                 
+                }
+                else if (result == 'unrated' || result == 'undetected' || result == 'timeout'){
+                  color = 'text-light'                 
+                }
+                else {
+                  color = 'text-danger'
+                }
+              %>
+              
+              <span class="<%= color %>"><%= vendor[engine].result %></span>
+            </td>
+          </tr>
+          <% }) %>
+        </table> 
 
+        <% } %>
       </div>
     </div>
 
