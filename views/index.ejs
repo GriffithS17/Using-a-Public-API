@@ -47,30 +47,18 @@
           </div>
         </form>
 
-        <% if(locals.content) { %>
+        <% if(showResults) { %>
 
         <hr class="mt-5">
 
         <h1 class="mt-2 mb-3">Votes:</h1>
 
-        <p class="text-success">Harmless: <%=  %></p>
-        <p class="text-danger">Malicious: <%= %></p>
+        <p class="text-success">Harmless: <%= harmless  %></p>
+        <p class="text-danger">Malicious: <%= malicious %></p>
 
         <hr class="mt-4">
-
-        
-
 
         <% } %>
-
-        <hr class="mt-5">
-
-        <h1 class="mt-2 mb-3">Votes:</h1>
-
-        <p class="text-success">Harmless: <%= %></p>
-        <p class="text-danger">Malicious: <%= %></p>
-
-        <hr class="mt-4">
 
       </div>
     </div>
