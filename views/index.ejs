@@ -22,9 +22,13 @@
           Insert a website link
         </h1>
 
+        <% if(error){ %>
+          <p class="fw-bold text-danger"><%= error %></p>
+        <% } %>
+
         <form action="/upload" method="post">
           <div>
-            <input class="form-control customMargin" type="text" id="link" name="link">
+            <input class="form-control customMargin" type="text" id="link" name="link" required>
           </div>
 
           <div class="col-lg-6 mx-auto">
@@ -61,7 +65,7 @@
         <hr class="mt-4">
 
         <table class="table mt-4">
-          <% sortedVendors.forEach(engine => { %>
+    <% sortedVendors.forEach(engine => { %>
           <tr>
             <td><%= engine %></td>
             <td>

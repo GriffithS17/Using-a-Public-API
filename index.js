@@ -8,7 +8,7 @@ const apiKey = 'REMOVED'
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.render("index.ejs", {showResults: false})
+  res.render("index.ejs", {showResults: false, error: null})
 })
 
 app.use(express.static("public"))
@@ -47,7 +47,9 @@ app.post("/upload", async (req, res) => {
     }
   }
 
-  const url = new URL(normalizeUrl(req.body.link))
+  const normalized = normalizeUrl(req.body.link)
+
+  const url = new URL(normalized)
   const domain = url.hostname
 
   try {
@@ -71,12 +73,16 @@ app.post("/upload", async (req, res) => {
       malicious: attributes.total_votes.malicious,
       vendor: vendor,
       sortedVendors: sortedVendors,
-      name: result.data.data.id
+      name: result.data.data.id,
+      error: null
     })
 
   } catch (error) {
-    console.log(error.response.data)
-    res.render("index.ejs", {content: JSON.stringify(error.response.data)})
+    console.log(error.response?.data)
+    res.render("index.ejs", {
+      showResults: false,
+      error: "Failed to analyze this URL. It is not a valid domain."
+    })
   }
 })
 
