@@ -3,7 +3,7 @@ import axios from "axios"
 
 const port = 3000
 const app = express()
-const apiKey = 'REMOVED'
+const apiKey = // put your Virustotal API key
 
 app.use(express.urlencoded({ extended: true }));
 
