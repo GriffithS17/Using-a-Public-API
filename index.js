@@ -51,8 +51,8 @@ app.post("/upload", async (req, res) => {
     const vendor = attributes.last_analysis_results
 
     const sortedVendors = Object.keys(vendor).sort((a, b) => {
-      const scoreA = verifyThreatLevel(vendor[a].result)
-      const scoreB = verifyThreatLevel(vendor[b].result)
+      const scoreA = verifyThreatLevel(vendor[a].category)
+      const scoreB = verifyThreatLevel(vendor[b].category)
 
       return scoreA - scoreB
     })
@@ -107,13 +107,13 @@ function isValidDomain(domain) {
 function verifyThreatLevel(a){
   var threatLevel
 
-  if (a == 'harmless' || a == 'clean'){
+  if (a == 'harmless'){
     threatLevel = 3
   }
   else if (a == 'suspicious'){
     threatLevel = 2
   }
-  else if (a == 'undetected' || a == 'unrated'){
+  else if (a == 'undetected' || a == 'timeout'){
     threatLevel = 4
   }
   else{

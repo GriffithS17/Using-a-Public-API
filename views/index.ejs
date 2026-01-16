@@ -12,10 +12,10 @@
       <div class="px-4 py-5 my-5 text-center">
         <img
           class="d-block mx-auto mb-4"
-          src="/images/bug.png"
+          src="/images/virus.png"
           alt=""
-          width="120"
-          height="120"
+          width="140"
+          height="140"
         >
 
         <h1 class="display-5 fw-bold text-body-emphasis">
@@ -71,15 +71,15 @@
             <td>
               <% 
                 let color = 'text-light'
-                let result = vendor[engine].result
+                let category = vendor[engine].category
                 
-                if(result == 'clean'){
+                if(category == 'harmless'){
                   color = 'text-success'
                 } 
-                else if (result == 'suspicious'){
+                else if (category == 'suspicious'){
                   color = 'text-warning'                 
                 }
-                else if (result == 'unrated' || result == 'undetected' || result == 'timeout'){
+                else if (category == 'undetected' || category == 'timeout'){
                   color = 'text-light'                 
                 }
                 else {
