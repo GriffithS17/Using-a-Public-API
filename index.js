@@ -3,17 +3,23 @@ import axios from "axios"
 
 const port = 3000
 const app = express()
-const apiKey = // put your Virustotal API key
 
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.render("index.ejs", {showResults: false, error: null})
+  res.render("index.ejs", {
+    showResults: false, 
+    error: null,
+    link: '',
+    apiKey: ''
+  })
 })
 
 app.use(express.static("public"))
 
 app.post("/upload", async (req, res) => {
+  const { link, apiKey } = req.body
+
   const config = {
     headers: {
       accept: 'application/json',
@@ -21,7 +27,7 @@ app.post("/upload", async (req, res) => {
     }
   }
 
-  let url = normalizeUrl(req.body.link)
+  let url = normalizeUrl(link)
 
   if (isValid(url)){
     url = new URL(url)
@@ -29,7 +35,9 @@ app.post("/upload", async (req, res) => {
   } else {
     return res.render("index.ejs", {
       showResults: false,
-      error: `${url} is not a valid URL.`
+      error: `${url} is not a valid URL.`,
+      link: link,
+      apiKey: apiKey
     })
   }
 
@@ -38,7 +46,9 @@ app.post("/upload", async (req, res) => {
   if (!isValidDomain(domain)) {
     return res.render("index.ejs", {
       showResults: false,
-      error: `${domain} is not a valid domain.`
+      error: `${domain} is not a valid domain.`,
+      link: link,
+      apiKey: apiKey
     })
   }
 
@@ -61,17 +71,22 @@ app.post("/upload", async (req, res) => {
       showResults: true,
       harmless: attributes.total_votes.harmless,
       malicious: attributes.total_votes.malicious,
+      malicious_results: attributes.last_analysis_stats.malicious,
       vendor: vendor,
       sortedVendors: sortedVendors,
       name: result.data.data.id,
-      error: null
+      error: null,
+      link: link,
+      apiKey: apiKey
     })
 
   } catch (error) {
     console.log(error.response?.data)
     res.render("index.ejs", {
       showResults: false,
-      error: "Failed to analyze this URL. It is not a valid domain."
+      error: "Failed to analyze this URL.",
+      link: link,
+      apiKey: apiKey
     })
   }
 })

@@ -19,7 +19,7 @@
         >
 
         <h1 class="display-5 fw-bold text-body-emphasis">
-          Insert a website link
+          Malware Analysis
         </h1>
 
         <% if(error){ %>
@@ -27,9 +27,8 @@
         <% } %>
 
         <form action="/upload" method="post">
-          <div>
-            <input class="form-control customMargin" type="text" id="link" name="link" required>
-          </div>
+          <input class="form-control customMargin" type="text" value="<%= link || '' %>" name="link" placeholder="Insert a URL or domain" required>
+          <input class="form-control customMargin" type="password" value="<%= apiKey || '' %>" name="apiKey" placeholder="Insert your VirusTotal API key" required>
 
           <div class="col-lg-6 mx-auto">
 
@@ -41,12 +40,6 @@
                 Submit
               </button>
 
-              <button 
-                type="reset"
-                class="btn btn-outline-danger btn-lg px-4"
-              >
-                Clear
-              </button>
             </div>
           </div>
         </form>
@@ -56,40 +49,55 @@
         <h1 class="fs-1 mt-5"><%= name %></h1>
 
         <hr class="mt-5">
+   
+        <div class="d-flex justify-content-evenly">
+          <div>
+            <h1 class="mt-2 mb-3 text-align-left">Score:</h1>
+            <%
+              let color = 'text-success'
 
-        <h1 class="mt-2 mb-3 text-align-left">Votes:</h1>
+              if (malicious_results > 0){
+                color = 'text-danger'
+              }
+            %>
+            <p class="text-success fs-3"><span class="<%= color %>"><%= malicious_results %>/93</span></p>
+          </div>
+          <div>
+            <h1 class="mt-2 mb-3 text-align-left">Votes:</h1>
 
-        <p class="text-success fs-4">Harmless: <%= harmless %></p>
-        <p class="text-danger fs-4">Malicious: <%= malicious %></p>
+            <p class="text-success fs-4">Harmless: <%= harmless %></p>
+            <p class="text-danger fs-4">Malicious: <%= malicious %></p>
+          </div>
+        </div>
 
         <hr class="mt-4">
 
         <table class="table mt-4">
-    <% sortedVendors.forEach(engine => { %>
-          <tr>
-            <td><%= engine %></td>
-            <td>
-              <% 
-                let color = 'text-light'
-                let category = vendor[engine].category
+          <% sortedVendors.forEach(engine => { %>
+            <tr>
+              <td><%= engine %></td>
+              <td>
+                <% 
+                  let color = 'text-light'
+                  let category = vendor[engine].category
+                  
+                  if(category == 'harmless'){
+                    color = 'text-success'
+                  } 
+                  else if (category == 'suspicious'){
+                    color = 'text-warning'                 
+                  }
+                  else if (category == 'undetected' || category == 'timeout'){
+                    color = 'text-light'                 
+                  }
+                  else {
+                    color = 'text-danger'
+                  }
+                %>
                 
-                if(category == 'harmless'){
-                  color = 'text-success'
-                } 
-                else if (category == 'suspicious'){
-                  color = 'text-warning'                 
-                }
-                else if (category == 'undetected' || category == 'timeout'){
-                  color = 'text-light'                 
-                }
-                else {
-                  color = 'text-danger'
-                }
-              %>
-              
-              <span class="<%= color %>"><%= vendor[engine].result %></span>
-            </td>
-          </tr>
+                <span class="<%= color %>"><%= vendor[engine].result %></span>
+              </td>
+            </tr>
           <% }) %>
         </table> 
 
